@@ -13,6 +13,40 @@ class ListPage extends React.Component {
     router: React.PropTypes.object,
   }
 
+  componentWillReceiveProps(newProps) {
+    if (!newProps.data.loading) {
+      if (this.subscription) {
+        if (newProps.data.allPosts !== this.props.data.allPosts) {
+          // if the feed has changed, we need to unsubscribe before resubscribing
+          console.log(this.subscription)
+          this.subscription();
+        } else {
+          // we already have an active subscription with the right params
+          return;
+        }
+      }
+      this.subscription = newProps.data.subscribeToMore({
+        document: SubscriptionQuery,
+        variables: null,
+
+        // this is where the magic happens.
+        updateQuery: (previousState, { subscriptionData }) => {
+          const newEntry = subscriptionData.data.createPost;
+
+          return {
+            allPosts: [
+              ...previousState.allPosts,
+              {
+                ...newEntry
+              }
+            ]
+          }
+        },
+        onError: (err) => console.error(err),
+      });
+    }
+  }
+
   render () {
     if (this.props.data.loading) {
       return (<Text>Loading</Text>)
@@ -51,6 +85,18 @@ class ListPage extends React.Component {
 
 const FeedQuery = gql`query { allPosts { id imageUrl description } }`
 
-const ListPageWithData = graphql(FeedQuery)(ListPage)
+const SubscriptionQuery = gql`
+  subscription {
+    createPost {
+      id
+      imageUrl
+      description
+    }
+  }
+`;
+
+const ListPageWithData = graphql(FeedQuery, {
+  pollInterval: 100000000
+})(ListPage)
 
 export default withRouter(ListPageWithData)

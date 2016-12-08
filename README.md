@@ -1,4 +1,4 @@
-# react-native-apollo-instagram-example
+# react-native-apollo-subscriptions-instagram
 ![](http://i.imgur.com/CH44AZF.png)
 
 
@@ -23,11 +23,12 @@ type Post {
 
 ### 2. Configure app data endpoint
 
-Open `src/routes.js` and paste your endpoint to the following line:
+Open `src/root.js` and paste your endpoint to the following line:
 
 ```js
-const client = new ApolloClient({
-  networkInterface: createNetworkInterface({ uri: 'https://api.graph.cool/simple/v1/__PROJECT_ID__'}),
+const wsClient = new Client('ws://subscriptions.graph.cool/__PROJECT_ID__');
+const networkInterface = createNetworkInterface({
+  uri: 'https://api.graph.cool/simple/v1/__PROJECT_ID__',
 })
 ```
 

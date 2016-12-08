@@ -18,7 +18,6 @@ class ListPage extends React.Component {
       if (this.subscription) {
         if (newProps.data.allPosts !== this.props.data.allPosts) {
           // if the feed has changed, we need to unsubscribe before resubscribing
-          console.log(this.subscription)
           this.subscription();
         } else {
           // we already have an active subscription with the right params
@@ -50,6 +49,10 @@ class ListPage extends React.Component {
   render () {
     if (this.props.data.loading) {
       return (<Text>Loading</Text>)
+    }
+
+    if (this.props.data.allPosts === undefined) {
+      throw new Error('Please specify a correct Graphcool endpoint in the src/root.js')
     }
 
     return (
@@ -95,8 +98,6 @@ const SubscriptionQuery = gql`
   }
 `;
 
-const ListPageWithData = graphql(FeedQuery, {
-  pollInterval: 100000000
-})(ListPage)
+const ListPageWithData = graphql(FeedQuery)(ListPage)
 
 export default withRouter(ListPageWithData)

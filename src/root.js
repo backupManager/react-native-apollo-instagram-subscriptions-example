@@ -3,16 +3,19 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client'
 import { ApolloProvider } from 'react-apollo'
 import { nativeHistory, Route, Router, } from 'react-router-native'
 import { Client } from 'subscriptions-transport-ws';
-import { addGraphQLSubscriptions } from './util'
+import { addGraphQLSubscriptions, checkUris } from './util'
 import * as x from 'subscriptions-transport-ws';
 
 import ListPage from './components/ListPage'
 import CreatePage from './components/CreatePage'
 
-const wsClient = new Client('ws://subscriptions.graph.cool/ciwf2nhji00ky01711z4twwvp');
+const wsClient = new Client('ws://subscriptions.graph.cool/__PROJECT_ID__');
 const networkInterface = createNetworkInterface({
-  uri: 'https://api.graph.cool/simple/v1/ciwf2nhji00ky01711z4twwvp',
+  uri: 'https://api.graph.cool/simple/v1/__PROJECT_ID__',
 })
+
+// we use this just for better error messages
+checkUris(wsClient, networkInterface)
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,

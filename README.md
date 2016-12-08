@@ -23,7 +23,7 @@ type Post {
 
 ### 2. Configure app data endpoint
 
-Open `src/root.js` and paste your endpoint to the following line:
+Open `src/root.js` and paste your endpoint to the following lines:
 
 ```js
 const wsClient = new Client('ws://subscriptions.graph.cool/__PROJECT_ID__');

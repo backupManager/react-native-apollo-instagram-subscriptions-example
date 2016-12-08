@@ -37,11 +37,7 @@ function isValidGraphcoolEndpoint(uri) {
   const lastSlash = uri.lastIndexOf('/')
   const projectId = uri.slice(lastSlash + 1, uri.length)
 
-  if (!isCuid(projectId)) {
-    return false
-  }
-
-  return true
+  return isCuid(projectId)
 }
 
 
